@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import json
 import numpy as np
@@ -6,12 +7,13 @@ import pandas as pd
 
 
 GB = "GEN11_MASTER_TCP_GB_NEW.xlsx"
+EXCEL_DIR = 'Excel Database/'
 
 
 def main():
     if not os.path.exists("output"):
         os.mkdir("output")
-    df = pd.read_excel('Excel Database/' + GB, sheet_name=None, dtype=str)
+    df = pd.read_excel(EXCEL_DIR + GB, sheet_name=None, dtype=str)
     unused = []
     used = []
     unused_STIDs = {}

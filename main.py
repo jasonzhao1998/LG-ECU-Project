@@ -2,7 +2,7 @@ import os
 import json
 
 
-CERT_FILES_DIR = "."
+CERT_FILES_DIR = "C:\\Users\\lgeuser\\Desktop"
 
 
 def read_json(directory):
@@ -18,23 +18,21 @@ def main():
 	total_STID_folders = 0
 	total_amount_ecu_files = 0
 	total_used_ecu_files = 0
-
-	read_json('output/used_GB.txt')
+	
 	for f in os.listdir(CERT_FILES_DIR):
-		if file[-2:] == 'GB':
-			for root, dirs, files in os.walk(f):
-				for file in files:
-					if file[-4:] == '.bin':
-						print(file)
-						total_amount_ecu_files += 1
-
-				if root[2:].isdigit() and len(root[2:]) == 9:
+		if f[-2:] == 'GB':
+			for root, dirs, files in os.walk(os.path.join(CERT_FILES_DIR, f)):
+				if os.path.basename(root).isdigit() and len(os.path.basename(root)) == 9:
+					has_ecu = False
+					for file in files:
+						if file[-4:] == '.bin':
+							print(file)
+							has_ecu = True
+							total_amount_ecu_files += 1
 					total_STID_folders += 1
-					if root[2:] in used_dict:
-						total_used_ecu_files += 1
-
-				for d in dirs:
-					pass
+					if os.path.basename(root) in used_dict:
+						if has_ecu:
+							total_used_ecu_files += 1
 
 	print("Total number of STID folders:", total_STID_folders)
 	print("Total number of ECU files:", total_amount_ecu_files)
