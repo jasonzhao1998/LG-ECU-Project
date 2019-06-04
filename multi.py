@@ -1,6 +1,7 @@
 import os
 import json
 import time
+import shutil
 import datetime
 import multiprocessing
 
@@ -14,18 +15,8 @@ INFO:
 '''
 
 CERT_FILES_DIR = "Z:\\Engineering\\01.OnStar\\11.Flashing\\01.Reflash\\Gen11 Cert Files"
-OUTPUT_DIR = "output/" + "output-" + datetime.datetime.now().strftime("%m-%d-%Y-%H:%M") + '.txt'
-GLOBAL_DICT = {
-	'MY21 TCP GB': [
-		[], [], []
-	],
-	'MY19(20) GB': [
-		[], [], []
-	],
-	'MY20 TCP ERA GB': [
-		[], [], []
-	]
-}
+OUTPUT_DIR = "output/" + "output-" + datetime.datetime.now().strftime("%m-%d-%Y-%H-%M") + '.txt'
+
 
 def read_json(directory):
 	with open(directory) as f:
@@ -63,6 +54,26 @@ def traverse(input):
 	print("Done:", directory)
 	
 
+def integrate():
+	print(OUTPUT_DIR)
+	output = open(OUTPUT_DIR, 'w')
+	for i in ('MY21 TCP GB', 'MY19(20) GB', 'MY20 TCP ERA GB'):
+		output.write(i + '\n')
+		data = [0] * 3
+		for f in os.listdir('output'):
+			if i in f:
+				print(f)
+				with open('output/' + f, 'r') as f2:
+					for k, l in enumerate([int(j.strip()) for j in f2.readlines()]):
+						data[k] += l
+				os.remove('output/' + f)
+		for i in data:
+			output.write(str(i))
+			output.write('\n')
+		output.write('\n')
+	output.close()
+	
+	
 def main():
 	output = open(OUTPUT_DIR, 'w')
 	output.close()
@@ -85,9 +96,8 @@ def main():
 		p_list.append(p)
 	
 	for p in p_list: p.join()
-
-	print(GLOBAL_DICT)
-
+	
 
 if __name__ == "__main__":
     main()
+    integrate()
