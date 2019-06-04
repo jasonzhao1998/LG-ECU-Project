@@ -41,6 +41,7 @@ def traverse(input):
 	total_STID_folders = 0
 	total_amount_ecu_files = 0
 	total_used_ecu_files = 0
+	output_path = "output/" + input[1] + '-' + str(os.getpid()) + '.txt'
 	print("Processing:", directory)
 	
 	for root, dirs, files in os.walk(directory):
@@ -55,9 +56,10 @@ def traverse(input):
 				if has_ecu:
 					total_used_ecu_files += 1
 	
-	GLOBAL_DICT[input[1]][0].append(total_STID_folders)  # Total number of STID folders
-	GLOBAL_DICT[input[1]][1].append(total_amount_ecu_files)  # Total number of ECU files
-	GLOBAL_DICT[input[1]][2].append(total_used_ecu_files)  # Total number of used ECU files
+	with open(output_path, 'w') as f:
+		f.write(str(total_STID_folders) + '\n')
+		f.write(str(total_amount_ecu_files) + '\n')
+		f.write(str(total_used_ecu_files) + '\n')
 	print("Done:", directory)
 	
 
@@ -82,10 +84,8 @@ def main():
 		p.start()
 		p_list.append(p)
 	
-	while p_list:
-		time.sleep(1)
-		if not p_list[0].is_alive():
-			p_list.pop(0)
+	for p in p_list: p.join()
+
 	print(GLOBAL_DICT)
 
 
