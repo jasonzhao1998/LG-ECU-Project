@@ -6,7 +6,7 @@ import pandas as pd
 
 
 GB = "GEN11_MASTER_TCP_GB_NEW.xlsx"
-EXCEL_DIR = 'Excel Database/'
+EXCEL_DIR = 'Z:\\Engineering\\01.OnStar\\11.Flashing\\01.Reflash\\Excel Database'
 
 
 def main():
