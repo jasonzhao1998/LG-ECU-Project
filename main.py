@@ -1,6 +1,13 @@
 import os
 import json
 
+'''
+TODO:
+
+	Check if other directories like GEM have cert files.
+	Check if there exists GB STID folders without cert files.
+	
+'''
 
 CERT_FILES_DIR = "C:\\Users\\lgeuser\\Desktop"
 
@@ -18,9 +25,10 @@ def main():
 	total_STID_folders = 0
 	total_amount_ecu_files = 0
 	total_used_ecu_files = 0
-	
+
 	for f in os.listdir(CERT_FILES_DIR):
-		if f[-2:] == 'GB':
+		if f[-2:] == 'GB':  # File directory has to end with GB
+			print(f)
 			for root, dirs, files in os.walk(os.path.join(CERT_FILES_DIR, f)):
 				if os.path.basename(root).isdigit() and len(os.path.basename(root)) == 9:
 					has_ecu = False
