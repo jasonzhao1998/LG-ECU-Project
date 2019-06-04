@@ -29,7 +29,7 @@ def main():
 	output.close()
 	
 	for f in os.listdir(CERT_FILES_DIR):
-		if f[-2:] != 'GB':  # File directory has to end with GB
+		if f[-2:] == 'GB':  # File directory has to end with GB
 			output = open("output/output.txt", 'a')
 			print("Processing:", f)
 			output.write("\nProcessing:" + f + '\n')
