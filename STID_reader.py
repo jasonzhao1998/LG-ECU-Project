@@ -6,13 +6,13 @@ import pandas as pd
 
 
 GB = "GEN11_MASTER_TCP_GB_NEW.xlsx"
-EXCEL_DIR = 'Z:\\Engineering\\01.OnStar\\11.Flashing\\01.Reflash\\Excel Database'
+EXCEL_DIR = r'Z:\Engineering\01.OnStar\11.Flashing\01.Reflash\Excel Database'
 
 
 def main():
     if not os.path.exists("output"):
         os.mkdir("output")
-    df = pd.read_excel(EXCEL_DIR + GB, sheet_name=None, dtype=str)
+    df = pd.read_excel(os.path.join(EXCEL_DIR, GB), sheet_name=None, dtype=str)
     unused = []
     used = []
     unused_STIDs = {}
@@ -23,7 +23,7 @@ def main():
 
         for index, row in df[sheet_name].iterrows():
             if not pd.isnull(row['STID']):
-                if pd.isnull(row['#']) and pd.isnull(row['CCM SW']) and pd.isnull(row['CCM HW']) and pd.isnull(row['VIM SW']) and pd.isnull(row['VIM HW']):
+                if pd.isnull(row['#']) and pd.isnull(row['LG Contact']) and pd.isnull(row['CCM SW']) and pd.isnull(row['CCM HW']) and pd.isnull(row['VIM SW']) and pd.isnull(row['VIM HW']):
                     unused.append(row)
                     unused_STIDs[row['STID']] = 1
                 else:
