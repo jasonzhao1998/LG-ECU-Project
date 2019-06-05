@@ -7,15 +7,15 @@ import multiprocessing
 
 '''
 TODO:
-	Cut 18000 from MY19(20) GB and 1600 from MY20 ERA GB of the unused ECUID files.
+	Cut 16000 from MY19(20) GB and 1600 from MY20 ERA GB of the unused ECUID files.
 	Maintain a record of STID range what's left and what's cut out.
-	Get a list first or not????
 	
 INFO:
 	GEM only has few cert files, so this can be done manually.
 	This program only works on the old computer.
 	There exists GB STID folders without cert files.
-	MY19(20) GB: MX: 4213, NA: 3416, EU: 4747, CN: 4733
+	MY19(20) GB: MX: 4213, NA: 3416, EU: 4747, CN: 4733.
+	STID folders on the excel sheets are not moved. 
 '''
 
 CERT_FILES_DIR = "Z:\\Engineering\\01.OnStar\\11.Flashing\\01.Reflash\\Gen11 Cert Files"
@@ -63,7 +63,7 @@ def traverse(input):
 			if has_ecu:
 				if os.path.basename(root) in USED_DICT:
 					total_used_ecu_files += 1
-				else:
+				else if os.path.basename(root) not in UNUSED_DICT:
 					if cur_cut <= total_cut_needed:
 						# shutil.move(ecu_file_dir, r"C:\Users\sarah.pentescu\Desktop")
 						f2.write(ecu_file_dir + '\n')
