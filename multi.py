@@ -7,18 +7,20 @@ import multiprocessing
 
 '''
 TODO:
-	Cut 18000 from MY19/20 GB and 1600 from MY20 ERA GB of the unused ECUID files.
+	Cut 18000 from MY19(20) GB and 1600 from MY20 ERA GB of the unused ECUID files.
 	Maintain a record of STID range what's left and what's cut out.
+	Get a list first or not????
 	
 INFO:
 	GEM only has few cert files, so this can be done manually.
 	This program only works on the old computer.
 	There exists GB STID folders without cert files.
+	MY19(20) GB: MX: 4213, NA: 3416, EU: 4747, CN: 4733
 '''
 
 CERT_FILES_DIR = "Z:\\Engineering\\01.OnStar\\11.Flashing\\01.Reflash\\Gen11 Cert Files"
 OUTPUT_DIR = "output/" + "output-" + datetime.datetime.now().strftime("%m-%d-%Y-%H-%M") + '.txt'
-TRAVERSE_FOLDERS = ('MY21 TCP GB', 'MY19(20) GB', 'MY20 TCP ERA GB')
+TRAVERSE_FOLDERS = ('MY19(20) GB', 'MY20 TCP ERA GB') # 'MY21 TCP GB', 
 
 
 def read_json(directory):
@@ -39,23 +41,39 @@ def traverse(input):
 	output_path = "output/" + input[1] + '-' + str(os.getpid()) + '.txt'
 	print("Processing:", directory)
 	f = open(output_path, 'w')
+	f2 = open(os.path.join('output', os.path.basename(directory) + '.txt'), 'w')
+	
+	total_cut_needed = 0
+	cur_cut = 0
+	if os.path.basename(directory) == "vehicle_ERA GB":
+		total_cut_needed = 1600
+	else:
+		total_cut_needed = 10000
 	
 	for root, dirs, files in os.walk(directory):
 		if os.path.basename(root).isdigit() and len(os.path.basename(root)) == 9:
 			has_ecu = False
+			ecu_file_dir = ''
 			for file in files:
 				if file[-4:] == '.bin':
 					has_ecu = True
 					total_amount_ecu_files += 1
+					ecu_file_dir = os.path.join(root, file)
 			total_STID_folders += 1
-			if os.path.basename(root) in USED_DICT:
-				if has_ecu:
+			if has_ecu:
+				if os.path.basename(root) in USED_DICT:
 					total_used_ecu_files += 1
+				else:
+					if cur_cut <= total_cut_needed:
+						# shutil.move(ecu_file_dir, r"C:\Users\sarah.pentescu\Desktop")
+						f2.write(ecu_file_dir + '\n')
+						cur_cut += 1
 	
 	f.write(str(total_STID_folders) + '\n')
 	f.write(str(total_amount_ecu_files) + '\n')
 	f.write(str(total_used_ecu_files) + '\n')
 	f.close()
+	f2.close()
 	print("Done:", directory)
 	
 
@@ -85,7 +103,7 @@ def main():
 	
 	dir_list = []
 	for f in os.listdir(CERT_FILES_DIR):
-		if f[-2:] == 'GB':
+		if f[-2:] == 'GB' and f in TRAVERSE_FOLDERS:
 			dir_list += [
 				(
 					os.path.join(os.path.join(CERT_FILES_DIR, os.path.basename(f)), i),
