@@ -14,7 +14,7 @@ INFO:
 	GEM only has few cert files, so this can be done manually.
 	This program only works on the old computer.
 	There exists GB STID folders without cert files.
-	MY19(20) GB: MX: 4213, NA: 3416, EU: 4747, CN: 4733.
+	MY19(20) GB: MX: 4213(4080), NA: 3416(3410), EU: 4747(4726), CN: 4733(4722).
 	STID folders on the excel sheets are not moved. 
 '''
 
@@ -63,7 +63,7 @@ def traverse(input):
 			if has_ecu:
 				if os.path.basename(root) in USED_DICT:
 					total_used_ecu_files += 1
-				else if os.path.basename(root) not in UNUSED_DICT:
+				elif os.path.basename(root) not in UNUSED_DICT:
 					if cur_cut <= total_cut_needed:
 						# shutil.move(ecu_file_dir, r"C:\Users\sarah.pentescu\Desktop")
 						f2.write(ecu_file_dir + '\n')
