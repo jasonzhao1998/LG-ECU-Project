@@ -10,8 +10,8 @@ EXCEL_DIR = r'Z:\Engineering\01.OnStar\11.Flashing\01.Reflash\Excel Database'
 
 
 def main():
-    if not os.path.exists("output"):
-        os.mkdir("output")
+    if not os.path.exists("reader_output"):
+        os.mkdir("reader_output")
     df = pd.read_excel(os.path.join(EXCEL_DIR, GB), sheet_name=None, dtype=str)
     unused = []
     used = []
@@ -31,17 +31,17 @@ def main():
                     used_STIDs[row['STID']] = 1
 
     # Output json files
-    with open('output/unused_GB.txt', 'w') as f:
+    with open('reader_output/unused_GB.txt', 'w') as f:
         json.dump(unused_STIDs, f)
-    with open('output/used_GB.txt', 'w') as f:
+    with open('reader_output/used_GB.txt', 'w') as f:
         json.dump(used_STIDs, f)
     print(len(used_STIDs))
 
     # Sample Output on Excel Files
     df_unused = pd.DataFrame(unused, columns=df['MY20Gen11CN_GB'].columns)
-    df_unused.to_excel("output/unused_GB.xlsx")
+    df_unused.to_excel("reader_output/unused_GB.xlsx")
     df_used = pd.DataFrame(used, columns=df['MY20Gen11CN_GB'].columns)
-    df_used.to_excel("output/used_GB.xlsx")
+    df_used.to_excel("reader_output/used_GB.xlsx")
 
 
 if __name__ == "__main__":

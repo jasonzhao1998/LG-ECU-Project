@@ -24,11 +24,14 @@ TOTAL_INFO_OUTPUT_DIR = "output/" + "output-" + datetime.datetime.now().strftime
 DIRS_TO_PROCESS = ('MY19(20) GB', 'MY20 TCP ERA GB')# 'MY21 TCP GB')
 
 def consent():
+	# Remove previous output files
+	if os.path.exists('output'):
+		shutil.rmtree('output')
+	
 	global CONSENT
 	val = input("Type 'yes' to move ECUIDs: ")
 	if val == 'yes':
 		CONSENT = True
-		print(CONSENT)
 
 def read_json(directory):
 	with open(directory) as file:
@@ -36,8 +39,8 @@ def read_json(directory):
 		return dictionary
 
 
-USED_DICT = read_json("output/used_GB.txt")
-UNUSED_DICT = read_json("output/unused_GB.txt")
+USED_DICT = read_json("reader_output/used_GB.txt")
+UNUSED_DICT = read_json("reader_output/unused_GB.txt")
 
 
 def walk(input, consent):
@@ -91,7 +94,7 @@ def walk(input, consent):
 			if has_ecu:
 				if STID in USED_DICT or STID in UNUSED_DICT:
 					total_used_ecu_files += 1
-					log_file.write(STID + ' -> ' + ecu_dir_name + ' ' + 'USED ' + os.path.basename(directory) + ' \n')
+					log_file.write(STID + ' -> ' + ecu_dir_name + ' ' + 'USED   ' + os.path.basename(directory) + '\n')
 				else:  # Unusd ECUID
 					if cur_cut < total_cut_needed:
 						if os.path.exists('output/ECUID/' + ecu_dir_name):
@@ -101,13 +104,13 @@ def walk(input, consent):
 						
 						if consent:
 							for dir in file_dirs:
-								print('a')#shutil.move(dir, "output/ECUID/" + ecu_dir_name)
+								pass# shutil.move(dir, "output/ECUID/" + ecu_dir_name)
 						cut_file.write(ecu_file_dir + '\n')
 						cur_cut += 1
-						log_file.write(STID + ' -> ' + ecu_dir_name + ' ' + 'CUT ' + os.path.basename(directory) + ' \n')
+						log_file.write(STID + ' -> ' + ecu_dir_name + ' ' + 'CUT   ' + os.path.basename(directory) + '\n')
 					else:
 						buffer_file.write(ecu_file_dir + '\n')
-						log_file.write(STID + ' -> ' + ecu_dir_name + ' ' + 'BUFFER ' + os.path.basename(directory) + ' \n')
+						log_file.write(STID + ' -> ' + ecu_dir_name + ' ' + 'BUFFER   ' + os.path.basename(directory) + '\n')
 						
 	sub_info_file.write(str(total_STID_folders) + '\n')
 	sub_info_file.write(str(total_amount_ecu_files) + '\n')
@@ -128,6 +131,7 @@ def integrate():
 		if file[:3] == 'LOG':
 			with open('output/' + file, 'r') as subfile:
 				log_output.write("".join(subfile.readlines()))
+			os.remove('output/' + file)
 			
 	for directory in DIRS_TO_PROCESS:
 		info_output.write(directory + '\n')
@@ -148,17 +152,19 @@ def integrate():
 	
 	
 def main():
-	# Initialize file and directory
-	info_output = open(TOTAL_INFO_OUTPUT_DIR, 'w')
-	info_output.close()
-	
 	# Make directories if do not exist
+	if not os.path.exists('output'):
+		os.mkdir('output')
 	if not os.path.exists('output/ECUID'):
 		os.mkdir('output/ECUID')
 	if not os.path.exists('output/BUFFER'):
 		os.mkdir('output/BUFFER')
 	if not os.path.exists('output/CUT'):
 		os.mkdir('output/CUT')
+		
+	# Initialize file and directory
+	info_output = open(TOTAL_INFO_OUTPUT_DIR, 'w')
+	info_output.close()
 	
 	dir_list = []
 	for directory in os.listdir(CERT_FILES_DIR):
