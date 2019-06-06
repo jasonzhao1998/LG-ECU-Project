@@ -9,6 +9,7 @@ import multiprocessing
 TODO:
 	Cut 16000 from MY19(20) GB and 1600 from MY20 ERA GB of the unused ECUID files.
 	Maintain a record of STID range what's left and what's cut out.
+	Cut 3800 MX, 3000 NA, 4600 EU, 4600 CN
 	
 INFO:
 	GEM only has few cert files, so this can be done manually.
