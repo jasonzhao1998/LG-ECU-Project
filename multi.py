@@ -45,7 +45,7 @@ UNUSED_DICT = read_json("reader_output/unused_GB.txt")
 
 def walk(input, consent):
 	directory = input[0]
-	shutil.copytree(directory, os.path.join(r'C:\Users\sarah.pentescu\Desktop\database_copy', os.path.basename(directory)))  # FIXME
+	
 	total_STID_folders, total_amount_ecu_files, total_used_ecu_files = 0, 0, 0
 	ecu_counter = 0
 	
@@ -105,7 +105,7 @@ def walk(input, consent):
 						
 						if consent:
 							for dir in file_dirs:
-								pass# shutil.move(dir, "output/ECUID/" + ecu_dir_name)
+								pass#shutil.move(dir, "output/ECUID/" + ecu_dir_name)
 						cut_file.write(ecu_file_dir + '\n')
 						cur_cut += 1
 						log_file.write(STID + ' -> ' + ecu_dir_name + ' ' + 'CUT   ' + os.path.basename(directory) + '\n')
@@ -114,7 +114,7 @@ def walk(input, consent):
 						log_file.write(STID + ' -> ' + ecu_dir_name + ' ' + 'BUFFER   ' + os.path.basename(directory) + '\n')
 			else:
 				if has_txt:
-					log_file.write(STID + ' -> ' + ecu_dir_name + ' ' + 'TXT ONLY   ' + os.path.basename(directory) + '\n')
+					log_file.write(STID + ' ' + 'TXT ONLY   ' + os.path.basename(directory) + '\n')
 				else:
 					log_file.write(STID + ' -> ' + ecu_dir_name + ' ' + 'NO ECUID   ' + os.path.basename(directory) + '\n')
 						
