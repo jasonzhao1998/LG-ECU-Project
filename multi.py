@@ -71,6 +71,7 @@ def walk(input, consent):
 	
 	for root, dirs, files in os.walk(directory):
 		# If we are in a STID folder
+		dirs.sort(reverse=True)
 		STID = os.path.basename(root)
 		if STID.isdigit() and len(STID) == 9:
 			total_STID_folders += 1
@@ -193,8 +194,44 @@ def main():
 	# Wait until all processes finish
 	for process in process_list: process.join()
 	
+def main2():
+	# Make directories if do not exist
+	if not os.path.exists('output'):
+		os.mkdir('output')
+	if not os.path.exists('output/ECUID'):
+		os.mkdir('output/ECUID')
+	if not os.path.exists('output/BUFFER'):
+		os.mkdir('output/BUFFER')
+	if not os.path.exists('output/CUT'):
+		os.mkdir('output/CUT')
+		
+	# Initialize file and directory
+	info_output = open(TOTAL_INFO_OUTPUT_DIR, 'w')
+	info_output.close()
+	
+	dir_list = []
+	for directory in os.listdir(CERT_FILES_DIR):
+		if directory == "Gen11 Cert Files Copy":
+			dir_list += [
+				(
+					os.path.join(os.path.join(CERT_FILES_DIR, os.path.basename(directory)), i),
+					os.path.basename(directory)
+				) for i in os.listdir(os.path.join(CERT_FILES_DIR, os.path.basename(directory)))
+				if os.path.isdir(os.path.join(os.path.join(CERT_FILES_DIR, os.path.basename(directory)), i))
+			]
+	
+	# Assign tasks to processes
+	process_list = []
+	while dir_list:
+		process = multiprocessing.Process(target=walk, args=(dir_list.pop(0), CONSENT,))
+		process.start()
+		process_list.append(process)
+	
+	# Wait until all processes finish
+	for process in process_list: process.join()
+	
 
 if __name__ == "__main__":
     consent()
-    main()
+    main2()
     integrate()
